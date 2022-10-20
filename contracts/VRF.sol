@@ -44,8 +44,8 @@ contract VRF is AccessControl {
     ) public view returns (uint256) {
         require(_max > _min, "generate:: invalid range");
 
-        require(isRoundValid(_round), "generate:: round is not proposed");
-        require(!isRoundOpen(_round), "generate:: round is not attested");
+        require(isRoundValid(_round), "generate:: round is not valid");
+        require(!isRoundOpen(_round), "generate:: round is open");
 
         return
             (uint256(
