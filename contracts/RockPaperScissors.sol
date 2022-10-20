@@ -101,20 +101,26 @@ contract RockPaperScissors is Ownable {
             uint256 round,
             uint256 amount
         ) = _parse(_round, _nonce);
-        delete userRoundNonceBet[player][_round][player_nonce];
-        delete userRoundNonceBet[opponent][_round][opponent_nonce];
+        delete userRoundNonceBet[player][round][player_nonce];
+        delete userRoundNonceBet[opponent][round][opponent_nonce];
 
+        // TODO Enum
+        /*
+        0 = Rock
+        1 = Paper
+        2 = Scissors
+        */
         uint256 player_choice = vrf.generate(
             0,
             2,
-            _round,
+            round,
             player_nonce,
             abi.encodePacked(amount, blockhash(player_block_number))
         );
         uint256 opponent_choice = vrf.generate(
             0,
             2,
-            _round,
+            round,
             opponent_nonce,
             abi.encodePacked(amount, blockhash(opponent_block_number))
         );
