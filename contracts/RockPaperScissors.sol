@@ -27,11 +27,30 @@ contract RockPaperScissors is Ownable {
     }
 
     // === MUTATIVES ===
-    function depositBet(uint256 _round, address _opponent) public payable {}
 
-    function withdrawBet(uint256 _round, address _opponent) public {}
+    // player_0
+    function player0Deposit(
+        uint256 _round,
+        uint256 _nonce,
+        address _player_1
+    ) public payable {}
 
-    function acceptBet(uint256 _round, address _opponent) public payable {}
+    function player0Withdraw(
+        uint256 _round,
+        uint256 _nonce,
+        address _player_1
+    ) public {}
 
-    function declineBet(uint256 _round, address _opponent) public {}
+    // player_1
+    function player1Deposit(
+        uint256 _round,
+        uint256 _nonce,
+        address _player_0
+    ) public payable {}
+
+    function player1Withdraw(
+        uint256 _round,
+        uint256 _nonce,
+        address _player_0
+    ) public {}
 }
