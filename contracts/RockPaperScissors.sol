@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IVRF.sol";
 
 contract RockPaperScissors is Ownable {
+    // === STRUCTS ===
     struct Bet {
         uint256 round;
         address player_0;
@@ -14,7 +15,8 @@ contract RockPaperScissors is Ownable {
         uint256 blocknumber;
     }
 
-    IVRF public vrf;
+    // === STATES ===
+    IVRF public immutable vrf;
 
     mapping(address => Bet) public userPendingBet;
     mapping(address => Bet) public userBet;
@@ -24,6 +26,7 @@ contract RockPaperScissors is Ownable {
         vrf = IVRF(_vrf);
     }
 
+    // === MUTATIVES ===
     function depositBet(uint256 _round, address _opponent) public payable {}
 
     function withdrawBet(uint256 _round, address _opponent) public {}
