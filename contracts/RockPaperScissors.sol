@@ -117,15 +117,13 @@ contract RockPaperScissors is Ownable {
     }
 
     // === MUTATIVES ===
-
-    // player_1 (responder)
-    function playerDeposit(
+    function deposit(
         uint256 _round,
         uint256 _nonce,
         address opponent
     ) public payable {}
 
-    function playerWithdraw(uint256 _round, uint256 _nonce) public {}
+    function withdraw(uint256 _round, uint256 _nonce) public {}
 
     function concludeGame(uint256 _round, uint256 _nonce) public {
         (
