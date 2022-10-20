@@ -47,7 +47,7 @@ contract VRF is IVRF, AccessControl {
         require(_max > _min, "generate:: invalid range");
 
         require(isRoundValid(_round), "generate:: round is not valid");
-        require(!isRoundOpen(_round), "generate:: round is open");
+        require(!isRoundOpen(_round), "generate:: round is not closed");
 
         return
             (uint256(
