@@ -60,17 +60,35 @@ contract VRF is AccessControl {
     }
 
     // === MUTATIVES (RESTRICTED) ===
-    function proposeRound(uint256 _round, bytes32 _hash) external {
-        require(hasRole(PROPOSER_ROLE, msg.sender), "propose:: not proposer");
+    function grantRole(bytes32 role, address account)
+        public
+        override
+        onlyRole(MANAGER_ROLE)
+    {
+        _grantRole(role, account);
+    }
 
+    function revokeRole(bytes32 role, address account)
+        public
+        override
+        onlyRole(MANAGER_ROLE)
+    {
+        _revokeRole(role, account);
+    }
+
+    function proposeRound(uint256 _round, bytes32 _hash)
+        external
+        onlyRole(PROPOSER_ROLE)
+    {
         require(!isRoundValid(_round), "propose:: proposed");
 
         roundHash[_round] = _hash;
     }
 
-    function attestRound(uint256 _round, bytes32 _secret) external {
-        require(hasRole(ATTESTOR_ROLE, msg.sender), "attest:: not attestor");
-
+    function attestRound(uint256 _round, bytes32 _secret)
+        external
+        onlyRole(ATTESTOR_ROLE)
+    {
         require(isRoundValid(_round), "attest:: not proposed");
         require(isRoundOpen(_round), "attest:: attested");
 
