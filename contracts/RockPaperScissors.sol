@@ -73,7 +73,7 @@ contract RockPaperScissors is Ownable {
         require(
             player_bet.player_0 != address(0) &&
                 player_bet.player_1 != address(0),
-            "_parseBetPair:: invalid player bet player"
+            "_parseBetPair:: invalid player bet"
         );
 
         player = msg.sender;
@@ -93,7 +93,7 @@ contract RockPaperScissors is Ownable {
         require(
             opponent_bet.player_0 != address(0) &&
                 opponent_bet.player_1 != address(0),
-            "_parseBetPair:: invalid opponent bet player"
+            "_parseBetPair:: invalid opponent bet"
         );
 
         player_block_number = player_bet.block_number;
