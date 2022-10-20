@@ -9,6 +9,7 @@ contract RockPaperScissors is Ownable {
     // === STRUCTS ===
     struct Bet {
         uint256 round;
+        uint256 nonce;
         address player_0;
         address player_1;
         uint256 amount;
@@ -18,8 +19,8 @@ contract RockPaperScissors is Ownable {
     // === STATES ===
     IVRF public immutable vrf;
 
-    mapping(address => Bet) public userPendingBet;
-    mapping(address => Bet) public userBet;
+    mapping(address => mapping(uint256 => Bet)) public userNoncePendingbet;
+    mapping(address => mapping(uint256 => Bet)) public userNonceBet;
 
     constructor(address _vrf) {
         require(_vrf != address(0), "null vrf");
