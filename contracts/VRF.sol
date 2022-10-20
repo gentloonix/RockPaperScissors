@@ -40,7 +40,8 @@ contract VRF is AccessControl {
         uint256 _min,
         uint256 _max,
         uint256 _round,
-        bytes32 _entropy
+        uint256 _nonce,
+        bytes memory _entropy
     ) public view returns (uint256) {
         require(_max > _min, "generate:: invalid range");
 
@@ -53,6 +54,7 @@ contract VRF is AccessControl {
                     abi.encodePacked(
                         roundHash[_round],
                         roundSecret[_round],
+                        _nonce,
                         _entropy
                     )
                 )
