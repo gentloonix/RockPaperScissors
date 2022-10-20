@@ -6,6 +6,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interfaces/IVRF.sol";
 
 contract RockPaperScissors is Ownable {
+    // === ENUMS ===
+    enum Result {
+        Rock,
+        Paper,
+        Scissors
+    }
+
     // === STRUCTS ===
     struct Bet {
         uint256 player_0_nonce;
@@ -30,6 +37,22 @@ contract RockPaperScissors is Ownable {
     }
 
     // === VIEWS ===
+    function calculateResult(
+        uint256 _round,
+        uint256 _nonce,
+        uint256 _block_number
+    ) public view returns (Result) {
+        return
+            Result(
+                vrf.generate(
+                    0,
+                    2,
+                    _round,
+                    _nonce,
+                    abi.encodePacked(blockhash(_block_number))
+                )
+            );
+    }
 
     // === VIEWS (PRIVATE) ===
     function _parse(uint256 _round, uint256 _nonce)
@@ -101,25 +124,15 @@ contract RockPaperScissors is Ownable {
         delete userRoundNonceBet[player][round][player_nonce];
         delete userRoundNonceBet[opponent][round][opponent_nonce];
 
-        // TODO Enum
-        /*
-        0 = Rock
-        1 = Paper
-        2 = Scissors
-        */
-        uint256 player_choice = vrf.generate(
-            0,
-            2,
+        Result player_choice = calculateResult(
             round,
             player_nonce,
-            abi.encodePacked(amount, blockhash(player_block_number))
+            player_block_number
         );
-        uint256 opponent_choice = vrf.generate(
-            0,
-            2,
+        Result opponent_choice = calculateResult(
             round,
             opponent_nonce,
-            abi.encodePacked(amount, blockhash(opponent_block_number))
+            opponent_block_number
         );
 
         // TODO rock-paper-scissors logic
