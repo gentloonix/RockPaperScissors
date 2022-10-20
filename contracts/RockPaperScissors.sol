@@ -11,6 +11,7 @@ contract RockPaperScissors is Ownable {
         address player_0;
         address player_1;
         uint256 amount;
+        uint256 blocknumber;
     }
 
     IVRF public vrf;
