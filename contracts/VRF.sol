@@ -36,6 +36,29 @@ contract VRF is AccessControl {
         return isRoundValid(_round) && roundSecret[_round] == bytes32(0);
     }
 
+    function generate(
+        uint256 _min,
+        uint256 _max,
+        uint256 _round,
+        bytes32 _entropy
+    ) public view returns (uint256) {
+        require(_max > _min, "generate:: invalid range");
+
+        require(isRoundValid(_round), "generate:: round is not proposed");
+        require(!isRoundOpen(_round), "generate:: round is not attested");
+
+        return
+            (uint256(
+                keccak256(
+                    abi.encodePacked(
+                        roundHash[_round],
+                        roundSecret[_round],
+                        _entropy
+                    )
+                )
+            ) % (_max - _min)) + _min;
+    }
+
     // === MUTATIVES (RESTRICTED) ===
     function proposeRound(uint256 _round, bytes32 _hash) external {
         require(hasRole(PROPOSER_ROLE, msg.sender), "propose:: not proposer");
