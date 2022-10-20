@@ -5,8 +5,6 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract VRF is AccessControl {
     // === CONSTANTS ===
-    bytes32 public constant MANAGER_ROLE =
-        bytes32(uint256(keccak256("vrf.manager")) - 1);
     bytes32 public constant PROPOSER_ROLE =
         bytes32(uint256(keccak256("vrf.proposer")) - 1);
     bytes32 public constant ATTESTOR_ROLE =
@@ -17,7 +15,8 @@ contract VRF is AccessControl {
     mapping(uint256 => bytes32) public roundSecret;
 
     constructor() {
-        _setupRole(MANAGER_ROLE, msg.sender);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+
         _setupRole(PROPOSER_ROLE, msg.sender);
         _setupRole(ATTESTOR_ROLE, msg.sender);
     }
@@ -62,22 +61,6 @@ contract VRF is AccessControl {
     }
 
     // === MUTATIVES (RESTRICTED) ===
-    function grantRole(bytes32 role, address account)
-        public
-        override
-        onlyRole(MANAGER_ROLE)
-    {
-        _grantRole(role, account);
-    }
-
-    function revokeRole(bytes32 role, address account)
-        public
-        override
-        onlyRole(MANAGER_ROLE)
-    {
-        _revokeRole(role, account);
-    }
-
     function proposeRound(uint256 _round, bytes32 _hash)
         external
         onlyRole(PROPOSER_ROLE)
