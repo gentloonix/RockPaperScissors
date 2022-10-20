@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./VRF.sol";
+import "../interfaces/IVRF.sol";
 
 contract RockPaperScissors is Ownable {
     struct Bet {
@@ -13,14 +13,14 @@ contract RockPaperScissors is Ownable {
         uint256 amount;
     }
 
-    VRF public vrf;
+    IVRF public vrf;
 
     mapping(address => Bet) public userPendingBet;
     mapping(address => Bet) public userBet;
 
     constructor(address _vrf) {
         require(_vrf != address(0), "null vrf");
-        vrf = VRF(_vrf);
+        vrf = IVRF(_vrf);
     }
 
     function depositBet(uint256 _round, address _opponent) public payable {}
