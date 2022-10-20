@@ -57,7 +57,7 @@ contract VRF is AccessControl {
                         _entropy
                     )
                 )
-            ) % (_max - _min)) + _min;
+            ) % (_max - _min + 1)) + _min;
     }
 
     // === MUTATIVES (RESTRICTED) ===
