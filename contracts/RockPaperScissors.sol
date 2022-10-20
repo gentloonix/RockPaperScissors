@@ -8,7 +8,6 @@ import "../interfaces/IVRF.sol";
 contract RockPaperScissors is Ownable {
     // === STRUCTS ===
     struct Bet {
-        uint256 round;
         uint256 player_0_nonce;
         uint256 player_1_nonce;
         address player_0;
@@ -69,11 +68,7 @@ contract RockPaperScissors is Ownable {
         opponent_block_number = opponent_bet.block_number;
         require(opponent_block_number != 0, "_parse:: missing opponent bet");
 
-        require(
-            player_bet.round == opponent_bet.round,
-            "_parse:: mismatch round"
-        );
-        round = player_bet.round;
+        round = _round;
         require(
             player_bet.amount == opponent_bet.amount,
             "_parse:: mismatch amount"
