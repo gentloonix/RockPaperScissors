@@ -54,7 +54,7 @@ contract RockPaperScissors is Ownable {
             );
     }
 
-    // === VIEWS (PRIVATE) ===
+    // === VIEWS PRIVATE ===
     function _parseBetPair(uint256 _round, uint256 _nonce)
         private
         view
@@ -77,7 +77,7 @@ contract RockPaperScissors is Ownable {
         );
 
         player = msg.sender;
-        if (player_bet.player_0 == msg.sender) {
+        if (player_bet.player_0 == player) {
             player_nonce = player_bet.player_0_nonce;
             opponent = player_bet.player_1;
             opponent_nonce = player_bet.player_1_nonce;
@@ -86,6 +86,10 @@ contract RockPaperScissors is Ownable {
             opponent = player_bet.player_0;
             opponent_nonce = player_bet.player_0_nonce;
         }
+        require(
+            player_nonce == _nonce,
+            "_parseBetPair:: invalid player bet nonce"
+        );
 
         Bet memory opponent_bet = userRoundNonceBet[opponent][_round][
             opponent_nonce
