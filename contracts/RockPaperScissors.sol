@@ -15,10 +15,10 @@ contract RockPaperScissors is Ownable {
 
     // === STRUCTS ===
     struct Bet {
-        uint256 player_0_nonce;
-        uint256 player_1_nonce;
         address player_0;
+        uint256 player_0_nonce;
         address player_1;
+        uint256 player_1_nonce;
         uint256 amount;
         uint256 block_number;
     }
@@ -37,7 +37,7 @@ contract RockPaperScissors is Ownable {
     }
 
     // === VIEWS ===
-    function calculateResult(
+    function generateResult(
         uint256 _round,
         uint256 _nonce,
         uint256 _block_number
@@ -55,7 +55,7 @@ contract RockPaperScissors is Ownable {
     }
 
     // === VIEWS (PRIVATE) ===
-    function _parse(uint256 _round, uint256 _nonce)
+    function _parseBetPair(uint256 _round, uint256 _nonce)
         private
         view
         returns (
@@ -70,6 +70,11 @@ contract RockPaperScissors is Ownable {
         )
     {
         Bet memory player_bet = userRoundNonceBet[msg.sender][_round][_nonce];
+        require(
+            player_bet.player_0 != address(0) &&
+                player_bet.player_1 != address(0),
+            "_parseBetPair:: invalid player bet player"
+        );
 
         player = msg.sender;
         if (player_bet.player_0 == msg.sender) {
@@ -85,16 +90,24 @@ contract RockPaperScissors is Ownable {
         Bet memory opponent_bet = userRoundNonceBet[opponent][_round][
             opponent_nonce
         ];
+        require(
+            opponent_bet.player_0 != address(0) &&
+                opponent_bet.player_1 != address(0),
+            "_parseBetPair:: invalid opponent bet player"
+        );
 
         player_block_number = player_bet.block_number;
-        require(player_block_number != 0, "_parse:: missing player bet");
+        require(player_block_number != 0, "_parseBetPair:: missing player bet");
         opponent_block_number = opponent_bet.block_number;
-        require(opponent_block_number != 0, "_parse:: missing opponent bet");
+        require(
+            opponent_block_number != 0,
+            "_parseBetPair:: missing opponent bet"
+        );
 
         round = _round;
         require(
             player_bet.amount == opponent_bet.amount,
-            "_parse:: mismatch amount"
+            "_parseBetPair:: mismatch amount"
         );
         amount = player_bet.amount;
     }
@@ -120,16 +133,16 @@ contract RockPaperScissors is Ownable {
             uint256 opponent_block_number,
             uint256 round,
             uint256 amount
-        ) = _parse(_round, _nonce);
+        ) = _parseBetPair(_round, _nonce);
         delete userRoundNonceBet[player][round][player_nonce];
         delete userRoundNonceBet[opponent][round][opponent_nonce];
 
-        Result player_choice = calculateResult(
+        Result player_choice = generateResult(
             round,
             player_nonce,
             player_block_number
         );
-        Result opponent_choice = calculateResult(
+        Result opponent_choice = generateResult(
             round,
             opponent_nonce,
             opponent_block_number
