@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "../interfaces/IVRF.sol";
+
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract VRF is AccessControl {
+contract VRF is IVRF, AccessControl {
     // === CONSTANTS ===
     bytes32 public constant PROPOSER_ROLE =
         bytes32(uint256(keccak256("vrf.proposer")) - 1);
