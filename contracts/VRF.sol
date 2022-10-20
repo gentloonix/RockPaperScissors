@@ -16,11 +16,17 @@ contract VRF is IVRF, AccessControl {
     mapping(uint256 => bytes32) public roundHash;
     mapping(uint256 => bytes32) public roundSecret;
 
-    constructor() {
+    constructor(address _proposer, address _attestor) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
 
-        _setupRole(PROPOSER_ROLE, msg.sender);
-        _setupRole(ATTESTOR_ROLE, msg.sender);
+        _setupRole(
+            PROPOSER_ROLE,
+            _proposer == address(0) ? msg.sender : _proposer
+        );
+        _setupRole(
+            ATTESTOR_ROLE,
+            _attestor == address(0) ? msg.sender : _attestor
+        );
     }
 
     // === VIEWS ===
