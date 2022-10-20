@@ -77,8 +77,10 @@ contract VRF is AccessControl {
         require(isRoundValid(_round), "attest:: not proposed");
         require(isRoundOpen(_round), "attest:: attested");
 
-        bytes32 _hash = computeHash(_secret);
-        require(roundHash[_round] == _hash, "attest:: wrong secret");
+        require(
+            roundHash[_round] == computeHash(_secret),
+            "attest:: wrong secret"
+        );
 
         roundSecret[_round] = _secret;
     }
