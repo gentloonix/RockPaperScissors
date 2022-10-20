@@ -80,6 +80,6 @@ contract VRF is AccessControl {
         bytes32 _hash = computeHash(_secret);
         require(roundHash[_round] == _hash, "attest:: wrong secret");
 
-        roundHash[_round] = _hash;
+        roundSecret[_round] = _secret;
     }
 }
