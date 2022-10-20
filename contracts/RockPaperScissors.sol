@@ -21,6 +21,8 @@ contract RockPaperScissors is Ownable {
     IVRF public immutable vrf;
 
     mapping(address => mapping(uint256 => mapping(uint256 => Bet)))
+        public userRoundNoncePendingBet;
+    mapping(address => mapping(uint256 => mapping(uint256 => Bet)))
         public userRoundNonceBet;
 
     constructor(address _vrf) {
@@ -30,31 +32,19 @@ contract RockPaperScissors is Ownable {
 
     // === MUTATIVES ===
 
-    // player_0 (initiator)
-    function player0Deposit(
-        uint256 _round,
-        uint256 _nonce,
-        address _player_1
-    ) public payable {}
-
-    function player0Withdraw(
-        uint256 _round,
-        uint256 _nonce,
-        address _player_1
-    ) public {}
-
     // player_1 (responder)
-    function player1Deposit(
+    function playerDeposit(
         uint256 _round,
         uint256 _nonce,
         address _player_0
-    ) public payable {}
+    ) public payable {
+        require(
+            _player_0 != msg.sender,
+            "player1Deposit: cannot bet against yourself"
+        );
+    }
 
-    function player1Withdraw(
-        uint256 _round,
-        uint256 _nonce,
-        address _player_0
-    ) public {}
+    function playerWithdraw(uint256 _round, uint256 _nonce) public {}
 
     function concludeGame(uint256 _round, uint256 _nonce) public {
         Bet memory player_bet = userRoundNonceBet[msg.sender][_round][_nonce];
@@ -87,14 +77,11 @@ contract RockPaperScissors is Ownable {
         );
         delete userRoundNonceBet[opponent][_round][opponent_nonce];
 
-        // TODO check if both sides of bets exist (player_0 / player_1 pair)
-
-/*
         uint256 player_choice = vrf.generate(
             0,
             2,
             _round,
-            _nonce,
+            player_nonce,
             abi.encodePacked(
                 player_bet.amount,
                 blockhash(player_bet.block_number)
@@ -104,15 +91,13 @@ contract RockPaperScissors is Ownable {
             0,
             2,
             _round,
-            _nonce,
+            opponent_nonce,
             abi.encodePacked(
                 opponent_bet.amount,
                 blockhash(opponent_bet.block_number)
             )
         );
-*/
 
-        // TODO calculate 2 random numbers
         // TODO rock-paper-scissors logic
         // TODO transfer tokens accordingly
     }
