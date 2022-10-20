@@ -19,8 +19,8 @@ contract RockPaperScissors is Ownable {
     // === STATES ===
     IVRF public immutable vrf;
 
-    mapping(address => mapping(uint256 => Bet)) public userNoncePendingbet;
-    mapping(address => mapping(uint256 => Bet)) public userNonceBet;
+    mapping(address => mapping(uint256 => mapping(uint256 => Bet)))
+        public userRoundNonceBet;
 
     constructor(address _vrf) {
         require(_vrf != address(0), "null vrf");
@@ -54,4 +54,6 @@ contract RockPaperScissors is Ownable {
         uint256 _nonce,
         address _player_0
     ) public {}
+
+    function concludeGame() public {}
 }
