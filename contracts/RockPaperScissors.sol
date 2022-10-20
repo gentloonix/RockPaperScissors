@@ -29,7 +29,7 @@ contract RockPaperScissors is Ownable {
 
     // === MUTATIVES ===
 
-    // player_0
+    // player_0 (initiator)
     function player0Deposit(
         uint256 _round,
         uint256 _nonce,
@@ -42,7 +42,7 @@ contract RockPaperScissors is Ownable {
         address _player_1
     ) public {}
 
-    // player_1
+    // player_1 (responder)
     function player1Deposit(
         uint256 _round,
         uint256 _nonce,
@@ -55,5 +55,12 @@ contract RockPaperScissors is Ownable {
         address _player_0
     ) public {}
 
-    function concludeGame() public {}
+    function concludeGame(uint256 _round, uint256 _nonce) public {
+        Bet memory bet = userRoundNonceBet[msg.sender][_round][_nonce];
+        require(bet.block_number == 0, "concludeGame:: bet not found");
+
+        // TODO calculate 2 random numbers
+        // TODO rock-paper-scissors logic
+        // TODO transfer tokens accordingly
+    }
 }
