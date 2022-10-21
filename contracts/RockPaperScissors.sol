@@ -115,12 +115,14 @@ contract RockPaperScissors is Ownable {
         address _opponent,
         uint256 _opponent_nonce
     ) public payable {
+        address _player = msg.sender;
+
         require(
             vrf.isRoundValid(_round) && vrf.isRoundOpen(_round),
             "deposit:: round not valid or not open"
         );
         require(
-            userRoundNoncePendingBet[msg.sender][_round][_player_nonce]
+            userRoundNoncePendingBet[_player][_round][_player_nonce]
                 .block_number == 0,
             "deposit:: pending bet"
         );
@@ -130,7 +132,7 @@ contract RockPaperScissors is Ownable {
         ][_opponent_nonce];
         if (mOpponentPendingBet.block_number != 0) {
             require(
-                mOpponentPendingBet.opponent == msg.sender ||
+                mOpponentPendingBet.opponent == _player ||
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
@@ -139,20 +141,20 @@ contract RockPaperScissors is Ownable {
                 "deposit:: mismatch amount"
             );
 
-            Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][
-                _round
-            ][_player_nonce];
-            delete userRoundNoncePendingBet[msg.sender][_round][_player_nonce];
+            Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
+                _player_nonce
+            ];
+            delete userRoundNoncePendingBet[_player][_round][_player_nonce];
             delete userRoundNoncePendingBet[_opponent][_round][_opponent_nonce];
 
-            userRoundNoncePendingBet[msg.sender][_round][
+            userRoundNoncePendingBet[_player][_round][
                 _player_nonce
             ] = mPendingBet;
             userRoundNoncePendingBet[_opponent][_round][
                 _opponent_nonce
             ] = mOpponentPendingBet;
         } else {
-            userRoundNoncePendingBet[msg.sender][_round][_player_nonce] = Bet(
+            userRoundNoncePendingBet[_player][_round][_player_nonce] = Bet(
                 msg.sender,
                 _player_nonce,
                 _opponent,
@@ -164,12 +166,14 @@ contract RockPaperScissors is Ownable {
     }
 
     function withdrawPendingBet(uint256 _round, uint256 _nonce) public {
-        Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][_round][
+        address _player = msg.sender;
+
+        Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
             _nonce
         ];
         require(mPendingBet.block_number != 0, "deposit:: no pending bet");
 
-        delete userRoundNoncePendingBet[msg.sender][_round][_nonce];
+        delete userRoundNoncePendingBet[_player][_round][_nonce];
 
         Address.sendValue(payable(msg.sender), mPendingBet.amount);
     }
