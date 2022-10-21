@@ -3,10 +3,11 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 import "../interfaces/IVRF.sol";
 
-contract RockPaperScissors is Ownable {
+contract RockPaperScissors is Ownable, ReentrancyGuard {
     // === ENUMS ===
     enum Result {
         Rock,
@@ -119,7 +120,7 @@ contract RockPaperScissors is Ownable {
         uint256 _player_nonce,
         address _opponent,
         uint256 _opponent_nonce
-    ) public payable {
+    ) public payable nonReentrant {
         address _player = msg.sender;
 
         require(
@@ -155,13 +156,21 @@ contract RockPaperScissors is Ownable {
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
-            mOpponentPendingBet.opponent = _player;
-            mOpponentPendingBet.opponent_nonce = _player_nonce;
 
             require(
-                msg.value == mOpponentPendingBet.amount,
+                msg.value >= mOpponentPendingBet.amount,
                 "deposit:: mismatch amount"
             );
+            if (msg.value > mOpponentPendingBet.amount) {
+                Address.sendValue(
+                    payable(_player),
+                    msg.value - mOpponentPendingBet.amount
+                );
+            }
+
+            mOpponentPendingBet.opponent = _player;
+            mOpponentPendingBet.opponent_nonce = _player_nonce;
+            mPendingBet.amount = mOpponentPendingBet.amount;
 
             delete userRoundNoncePendingBet[_player][_round][_player_nonce];
             delete userRoundNoncePendingBet[_opponent][_round][_opponent_nonce];
