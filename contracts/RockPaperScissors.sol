@@ -181,7 +181,7 @@ contract RockPaperScissors is Ownable {
     function concludeGame(uint256 _round, uint256 _nonce) public {
         require(
             vrf.isRoundValid(_round) && !vrf.isRoundOpen(_round),
-            "deposit:: round not valid or still open"
+            "concludeGame:: round not valid or still open"
         );
 
         (
