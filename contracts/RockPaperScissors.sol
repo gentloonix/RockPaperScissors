@@ -156,7 +156,7 @@ contract RockPaperScissors is Ownable {
         }
     }
 
-    function withdraw(uint256 _round, uint256 _nonce) public {
+    function withdrawPendingBet(uint256 _round, uint256 _nonce) public {
         Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][_round][
             _nonce
         ];
