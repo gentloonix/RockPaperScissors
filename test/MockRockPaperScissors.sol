@@ -34,7 +34,7 @@ contract MockRockPaperScissors {
     }
 
     function testWithdrawPendingBet() public {
-        uint256 _round = 0;
+        uint256 _round = 1;
         bytes32 _secret = bytes32(
             0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
         );
@@ -55,7 +55,7 @@ contract MockRockPaperScissors {
     }
 
     function testGame() public {
-        uint256 _round = 0;
+        uint256 _round = 2;
         bytes32 _secret = bytes32(
             0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
         );
