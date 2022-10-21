@@ -134,11 +134,7 @@ contract RockPaperScissors is Ownable {
             _round
         ][_opponent_nonce];
 
-        require(
-            userRoundNoncePendingBet[_player][_round][_player_nonce]
-                .block_number == 0,
-            "deposit:: pending bet"
-        );
+        require(mPendingBet.block_number == 0, "deposit:: pending bet");
 
         if (mOpponentPendingBet.block_number != 0) {
             require(
@@ -146,6 +142,9 @@ contract RockPaperScissors is Ownable {
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
+            if (mOpponentPendingBet.opponent == address(0)) {
+                mOpponentPendingBet.opponent = _player;
+            }
             require(
                 msg.value == mOpponentPendingBet.amount,
                 "deposit:: mismatch amount"
@@ -186,6 +185,8 @@ contract RockPaperScissors is Ownable {
     }
 
     function concludeGame(uint256 _round, uint256 _nonce) public {
+        address _player = msg.sender;
+
         require(
             vrf.isRoundValid(_round) && !vrf.isRoundOpen(_round),
             "concludeGame:: round not valid or still open"
@@ -200,17 +201,17 @@ contract RockPaperScissors is Ownable {
             uint256 opponent_block_number,
             uint256 round,
             uint256 amount
-        ) = _parseBetPair(msg.sender, _round, _nonce);
+        ) = _getPair(_player, _round, _nonce);
         delete userRoundNonceBet[player][round][player_nonce];
         delete userRoundNonceBet[opponent][round][opponent_nonce];
 
-        Result player_choice = generateResult(
+        Result player_choice = getResult(
             round,
             player_nonce,
             player,
             player_block_number
         );
-        Result opponent_choice = generateResult(
+        Result opponent_choice = getResult(
             round,
             opponent_nonce,
             opponent,
