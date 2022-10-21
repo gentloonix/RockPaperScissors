@@ -11,4 +11,8 @@ contract MockWallet {
     ) public {
         Address.functionCallWithValue(target, data, value);
     }
+
+    fallback() external payable {}
+
+    receive() external payable {}
 }
