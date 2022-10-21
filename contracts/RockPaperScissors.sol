@@ -78,12 +78,12 @@ contract RockPaperScissors is Ownable {
         require(
             mPlayerBet.player != address(0) &&
                 mPlayerBet.opponent != address(0),
-            "_parseBetPair:: invalid player bet"
+            "invalid player bet"
         );
 
         player = _player;
         player_nonce = mPlayerBet.player_nonce;
-        require(player_nonce == _nonce, "_parseBetPair:: mismatch nonce");
+        require(player_nonce == _nonce, "mismatch nonce");
         opponent = mPlayerBet.opponent;
         opponent_nonce = mPlayerBet.opponent_nonce;
 
@@ -93,22 +93,16 @@ contract RockPaperScissors is Ownable {
         require(
             mOpponentBet.player != mPlayerBet.opponent &&
                 mOpponentBet.opponent != mPlayerBet.player,
-            "_parseBetPair:: invalid opponent bet"
+            "invalid opponent bet"
         );
 
         player_block_number = mPlayerBet.block_number;
-        require(player_block_number != 0, "_parseBetPair:: invalid player bet");
+        require(player_block_number != 0, "invalid player bet");
         opponent_block_number = mOpponentBet.block_number;
-        require(
-            opponent_block_number != 0,
-            "_parseBetPair:: invalid opponent bet"
-        );
+        require(opponent_block_number != 0, "invalid opponent bet");
 
         round = _round;
-        require(
-            mPlayerBet.amount == mOpponentBet.amount,
-            "_parseBetPair:: mismatch amount"
-        );
+        require(mPlayerBet.amount == mOpponentBet.amount, "mismatch amount");
         amount = mPlayerBet.amount;
     }
 
