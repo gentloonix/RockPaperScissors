@@ -134,7 +134,7 @@ contract RockPaperScissors is Ownable {
         );
 
         userRoundNoncePendingBet[_player][_round][_player_nonce] = Bet(
-            msg.sender,
+            _player,
             _player_nonce,
             _opponent,
             _opponent_nonce,
