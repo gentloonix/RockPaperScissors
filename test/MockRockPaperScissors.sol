@@ -64,16 +64,14 @@ contract MockRockPaperScissors {
             0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
         );
 
-        uint256 balanceBefore = address(this).balance;
-
         vrf.proposeRound(_round, vrf.computeHash(_secret));
 
         game.deposit{value: 0.01 ether}(_round, gameNonce, address(0), 0);
         Address.sendValue(payable(address(mockWallet)), 0.01 ether);
         mockWallet.call(
-            address(vrf),
+            address(game),
             abi.encodeWithSignature(
-                "deposit(uint256,uint256,address,uint256)",
+                "deposit",
                 _round,
                 gameNonce,
                 address(this),
@@ -81,16 +79,13 @@ contract MockRockPaperScissors {
             ),
             0.01 ether
         );
-        gameNonce += 1;
-
-        uint256 balanceAfter = address(this).balance;
-        assert(balanceBefore - balanceAfter == 0.01 ether);
 
         vrf.attestRound(_round, _secret);
 
         game.concludeGame(_round, gameNonce);
-        assert(balanceBefore == address(this).balance);
 
         // TODO Show results
+
+        gameNonce += 1;
     }
 }
