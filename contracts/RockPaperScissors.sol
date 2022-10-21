@@ -127,14 +127,27 @@ contract RockPaperScissors is Ownable {
             "deposit:: round not valid or not open"
         );
 
+        require(
+            userRoundNoncePendingBet[_player][_round][_player_nonce]
+                .block_number == 0,
+            "deposit:: pending bet"
+        );
+
+        userRoundNoncePendingBet[_player][_round][_player_nonce] = Bet(
+            msg.sender,
+            _player_nonce,
+            _opponent,
+            _opponent_nonce,
+            msg.value,
+            block.number
+        );
+
         Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
             _player_nonce
         ];
         Bet memory mOpponentPendingBet = userRoundNoncePendingBet[_opponent][
             _round
         ][_opponent_nonce];
-
-        require(mPendingBet.block_number == 0, "deposit:: pending bet");
 
         if (mOpponentPendingBet.block_number != 0) {
             require(
@@ -145,6 +158,7 @@ contract RockPaperScissors is Ownable {
             if (mOpponentPendingBet.opponent == address(0)) {
                 mOpponentPendingBet.opponent = _player;
             }
+
             require(
                 msg.value == mOpponentPendingBet.amount,
                 "deposit:: mismatch amount"
@@ -153,21 +167,10 @@ contract RockPaperScissors is Ownable {
             delete userRoundNoncePendingBet[_player][_round][_player_nonce];
             delete userRoundNoncePendingBet[_opponent][_round][_opponent_nonce];
 
-            userRoundNoncePendingBet[_player][_round][
-                _player_nonce
-            ] = mPendingBet;
-            userRoundNoncePendingBet[_opponent][_round][
+            userRoundNonceBet[_player][_round][_player_nonce] = mPendingBet;
+            userRoundNonceBet[_opponent][_round][
                 _opponent_nonce
             ] = mOpponentPendingBet;
-        } else {
-            userRoundNoncePendingBet[_player][_round][_player_nonce] = Bet(
-                msg.sender,
-                _player_nonce,
-                _opponent,
-                _opponent_nonce,
-                msg.value,
-                block.number
-            );
         }
     }
 
