@@ -204,6 +204,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             "concludeGame:: round not valid or still open"
         );
 
+        // reverts on invalid pair
         (
             address player,
             uint256 player_nonce,
