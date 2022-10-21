@@ -67,6 +67,8 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
     }
 
     // === UTILS ===
+    // _getPair: parse established bet pairs
+    // reverts on error
     function _getPair(
         address _player,
         uint256 _round,
