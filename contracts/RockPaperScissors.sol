@@ -52,6 +52,8 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             "getResult:: round not valid or still open"
         );
 
+        // input params as entropy
+        // random number of 0 to 2, 1:1 Result mapping
         return
             Result(
                 vrf.generate(
