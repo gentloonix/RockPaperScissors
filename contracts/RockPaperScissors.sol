@@ -83,10 +83,7 @@ contract RockPaperScissors is Ownable {
 
         player = _player;
         player_nonce = player_bet.player_nonce;
-        require(
-            player_nonce == _nonce,
-            "_parseBetPair:: invalid player bet nonce"
-        );
+        require(player_nonce == _nonce, "_parseBetPair:: mismatch nonce");
         opponent = player_bet.opponent;
         opponent_nonce = player_bet.opponent_nonce;
 
