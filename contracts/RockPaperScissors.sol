@@ -170,6 +170,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
 
             mOpponentPendingBet.opponent = _player;
             mOpponentPendingBet.opponent_nonce = _player_nonce;
+
             mPendingBet.amount = mOpponentPendingBet.amount;
 
             delete userRoundNoncePendingBet[_player][_round][_player_nonce];
