@@ -91,8 +91,8 @@ contract RockPaperScissors is Ownable {
             opponent_nonce
         ];
         require(
-            mOpponentBet.player != address(0) &&
-                mOpponentBet.opponent != address(0),
+            mOpponentBet.player != mPlayerBet.opponent &&
+                mOpponentBet.opponent != mPlayerBet.player,
             "_parseBetPair:: invalid opponent bet"
         );
 
@@ -129,8 +129,8 @@ contract RockPaperScissors is Ownable {
             _round
         ][_opponent_nonce];
         if (
-            mOpponentPendingBet.block_number != 0 &&
-            mOpponentPendingBet.opponent == msg.sender
+            mOpponentPendingBet.block_number == 0 &&
+            mOpponentPendingBet.opponent != msg.sender
         ) {
             Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][
                 _round
