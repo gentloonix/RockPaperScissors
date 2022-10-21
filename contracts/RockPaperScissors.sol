@@ -259,6 +259,11 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             } else {
                 uint256 player_choice_uint256 = uint256(player_choice);
                 uint256 opponent_choice_uint256 = uint256(opponent_choice);
+                // rock wins scissors, scissors win paper
+                // rock = 0
+                // scissors = 1
+                // paper = 2
+                // thus, smaller result wins
                 if (player_choice_uint256 < opponent_choice_uint256) {
                     // player wins
                     Address.sendValue(payable(player), amount * 2);
