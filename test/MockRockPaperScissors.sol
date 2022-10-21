@@ -86,6 +86,8 @@ contract MockRockPaperScissors {
         uint256 balanceAfter = address(this).balance;
         assert(balanceBefore - balanceAfter == 0.01 ether);
 
+        vrf.attestRound(_round, _secret);
+
         game.concludeGame(_round, gameNonce);
         assert(balanceBefore == address(this).balance);
     }
