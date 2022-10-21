@@ -69,6 +69,7 @@ contract MockRockPaperScissors {
         vrf.proposeRound(_round, vrf.computeHash(_secret));
 
         game.deposit{value: 0.01 ether}(_round, gameNonce, address(0), 0);
+        Address.sendValue(payable(address(mockWallet)), 0.01 ether);
         mockWallet.call(
             address(vrf),
             abi.encodeWithSignature(
