@@ -92,8 +92,8 @@ contract RockPaperScissors is Ownable {
             opponent_nonce
         ];
         require(
-            mOpponentBet.player != mPlayerBet.opponent &&
-                mOpponentBet.opponent != mPlayerBet.player,
+            mOpponentBet.player == mPlayerBet.opponent &&
+                mOpponentBet.opponent == mPlayerBet.player,
             "invalid opponent bet"
         );
 
