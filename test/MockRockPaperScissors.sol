@@ -8,12 +8,14 @@ import "./MockWallet.sol";
 contract MockRockPaperScissors {
     IVRF public immutable vrf;
     RockPaperScissors public immutable game;
+    MockWallet public immutable mockWallet;
 
     constructor() payable {
         require(msg.value >= 1 ether, "ether required");
         IVRF _vrf = new VRF(address(this), address(this));
         vrf = _vrf;
         game = new RockPaperScissors(address(_vrf));
+        mockWallet = new MockWallet();
     }
 
     fallback() external payable {}
