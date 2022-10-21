@@ -233,7 +233,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
         );
 
         if (player_choice == opponent_choice) {
-            // draw, refund both players
+            // draw, refund
             Address.sendValue(payable(player), amount);
             Address.sendValue(payable(opponent), amount);
         } else {
