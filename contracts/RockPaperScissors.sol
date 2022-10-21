@@ -120,6 +120,10 @@ contract RockPaperScissors is Ownable {
         uint256 _opponent_nonce
     ) public payable {
         require(
+            vrf.isRoundValid(_round) && vrf.isRoundOpen(_round),
+            "deposit:: round not valid or not open"
+        );
+        require(
             userRoundNoncePendingBet[msg.sender][_round][_player_nonce]
                 .block_number == 0,
             "deposit:: pending bet"
@@ -128,10 +132,12 @@ contract RockPaperScissors is Ownable {
         Bet memory mOpponentPendingBet = userRoundNoncePendingBet[_opponent][
             _round
         ][_opponent_nonce];
-        if (
-            mOpponentPendingBet.block_number == 0 &&
-            mOpponentPendingBet.opponent != msg.sender
-        ) {
+        if (mOpponentPendingBet.block_number != 0) {
+            require(
+                mOpponentPendingBet.opponent == msg.sender ||
+                    mOpponentPendingBet.opponent == address(0),
+                "deposit:: not opponent"
+            );
             Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][
                 _round
             ][_player_nonce];
