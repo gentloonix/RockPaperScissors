@@ -28,8 +28,10 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
     // === STATES ===
     IVRF public immutable vrf;
 
+    // userRoundNoncePendingBet: pending bets, retractable
     mapping(address => mapping(uint256 => mapping(uint256 => Bet)))
         public userRoundNoncePendingBet;
+    // userRoundNoncePendingBet: established bets, not retractable
     mapping(address => mapping(uint256 => mapping(uint256 => Bet)))
         public userRoundNonceBet;
 
