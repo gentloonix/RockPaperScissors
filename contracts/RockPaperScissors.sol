@@ -250,8 +250,15 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             } else {
                 uint256 player_choice_uint256 = uint256(player_choice);
                 uint256 opponent_choice_uint256 = uint256(opponent_choice);
-
-                // TODO implement me
+                if (player_choice_uint256 < opponent_choice_uint256) {
+                    // player wins
+                    Address.sendValue(payable(player), amount * 2);
+                } else if (opponent_choice_uint256 < player_choice_uint256) {
+                    // opponent wins
+                    Address.sendValue(payable(opponent), amount * 2);
+                } else {
+                    revert("concludeGame:: unreachable");
+                }
             }
         }
     }
