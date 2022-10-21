@@ -9,8 +9,9 @@ contract MockRockPaperScissors {
     RockPaperScissors public immutable game;
 
     constructor() payable {
-        vrf = new VRF(address(this), address(this));
-        game = new RockPaperScissors(address(vrf));
+        IVRF _vrf = new VRF(address(this), address(this));
+        vrf = _vrf;
+        game = new RockPaperScissors(address(_vrf));
     }
 
     fallback() external payable {}
@@ -19,9 +20,15 @@ contract MockRockPaperScissors {
 
     function withdrawPendingBetDeposit() public {
         uint256 _round = 0;
+        bytes32 _secret = bytes32(
+            0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
+        );
+
         uint256 _nonce = 0;
 
         uint256 balanceBefore = address(this).balance;
+
+        vrf.proposeRound(_round, vrf.computeHash(_secret));
 
         game.deposit{value: 1 ether}(_round, _nonce, address(0), 0);
 
