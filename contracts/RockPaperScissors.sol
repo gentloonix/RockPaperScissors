@@ -184,7 +184,7 @@ contract RockPaperScissors is Ownable {
 
         delete userRoundNoncePendingBet[_player][_round][_nonce];
 
-        Address.sendValue(payable(msg.sender), mPendingBet.amount);
+        Address.sendValue(payable(_player), mPendingBet.amount);
     }
 
     function concludeGame(uint256 _round, uint256 _nonce) public {
