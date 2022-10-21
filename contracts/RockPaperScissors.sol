@@ -155,9 +155,8 @@ contract RockPaperScissors is Ownable {
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
-            if (mOpponentPendingBet.opponent == address(0)) {
-                mOpponentPendingBet.opponent = _player;
-            }
+            mOpponentPendingBet.opponent = _player;
+            mOpponentPendingBet.opponent_nonce = _player_nonce;
 
             require(
                 msg.value == mOpponentPendingBet.amount,
