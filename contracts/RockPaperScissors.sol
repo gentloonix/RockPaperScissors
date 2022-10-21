@@ -196,7 +196,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
         Address.sendValue(payable(_player), mPendingBet.amount);
     }
 
-    function concludeGame(uint256 _round, uint256 _nonce) public {
+    function concludeGame(uint256 _round, uint256 _nonce) public nonReentrant {
         address _player = msg.sender;
 
         require(
