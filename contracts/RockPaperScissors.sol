@@ -214,6 +214,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             uint256 round,
             uint256 amount
         ) = _getPair(_player, _round, _nonce);
+
         delete userRoundNonceBet[player][round][player_nonce];
         delete userRoundNonceBet[opponent][round][opponent_nonce];
 
