@@ -97,11 +97,11 @@ contract RockPaperScissors is Ownable {
         );
 
         player_block_number = player_bet.block_number;
-        require(player_block_number != 0, "_parseBetPair:: missing player bet");
+        require(player_block_number != 0, "_parseBetPair:: invalid player bet");
         opponent_block_number = opponent_bet.block_number;
         require(
             opponent_block_number != 0,
-            "_parseBetPair:: missing opponent bet"
+            "_parseBetPair:: invalid opponent bet"
         );
 
         round = _round;
