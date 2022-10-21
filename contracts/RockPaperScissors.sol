@@ -119,11 +119,27 @@ contract RockPaperScissors is Ownable {
     // === MUTATIVES ===
     function deposit(
         uint256 _round,
-        uint256 _nonce,
-        address opponent
-    ) public payable {}
+        uint256 _player_nonce,
+        address _opponent,
+        uint256 _opponent_nonce
+    ) public payable {
+        Bet storage pendingBet = userRoundNoncePendingBet[msg.sender][_round][
+            _player_nonce
+        ];
+        require(pendingBet.block_number == 0, "deposit:: pending bet exists");
 
-    function withdraw(uint256 _round, uint256 _nonce) public {}
+        // TODO Implement
+    }
+
+    function withdraw(uint256 _round, uint256 _nonce) public {
+        require(
+            userRoundNoncePendingBet[msg.sender][_round][_nonce].block_number !=
+                0,
+            "deposit:: pending bet missing"
+        );
+
+        delete userRoundNoncePendingBet[msg.sender][_round][_nonce];
+    }
 
     function concludeGame(uint256 _round, uint256 _nonce) public {
         (
