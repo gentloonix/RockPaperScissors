@@ -211,6 +211,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             "concludeGame:: round not valid or still open"
         );
 
+        // get records
         // reverts on invalid pair
         (
             address player,
@@ -223,6 +224,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             uint256 amount
         ) = _getPair(_player, _round, _nonce);
 
+        // clear records
         delete userRoundNonceBet[player][round][player_nonce];
         delete userRoundNonceBet[opponent][round][opponent_nonce];
 
