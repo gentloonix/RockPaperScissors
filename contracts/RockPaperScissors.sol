@@ -38,7 +38,7 @@ contract RockPaperScissors is Ownable {
     }
 
     // === VIEWS ===
-    function generateResult(
+    function getResult(
         uint256 _round,
         uint256 _nonce,
         address _player,
@@ -46,7 +46,7 @@ contract RockPaperScissors is Ownable {
     ) public view returns (Result) {
         require(
             vrf.isRoundValid(_round) && !vrf.isRoundOpen(_round),
-            "generateResult:: round not valid or still open"
+            "getResult:: round not valid or still open"
         );
 
         return
@@ -62,7 +62,7 @@ contract RockPaperScissors is Ownable {
     }
 
     // === UTILS ===
-    function _parseBetPair(
+    function _getPair(
         address _player,
         uint256 _round,
         uint256 _nonce
@@ -126,15 +126,20 @@ contract RockPaperScissors is Ownable {
             vrf.isRoundValid(_round) && vrf.isRoundOpen(_round),
             "deposit:: round not valid or not open"
         );
+
+        Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
+            _player_nonce
+        ];
+        Bet memory mOpponentPendingBet = userRoundNoncePendingBet[_opponent][
+            _round
+        ][_opponent_nonce];
+
         require(
             userRoundNoncePendingBet[_player][_round][_player_nonce]
                 .block_number == 0,
             "deposit:: pending bet"
         );
 
-        Bet memory mOpponentPendingBet = userRoundNoncePendingBet[_opponent][
-            _round
-        ][_opponent_nonce];
         if (mOpponentPendingBet.block_number != 0) {
             require(
                 mOpponentPendingBet.opponent == _player ||
@@ -146,9 +151,6 @@ contract RockPaperScissors is Ownable {
                 "deposit:: mismatch amount"
             );
 
-            Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
-                _player_nonce
-            ];
             delete userRoundNoncePendingBet[_player][_round][_player_nonce];
             delete userRoundNoncePendingBet[_opponent][_round][_opponent_nonce];
 
