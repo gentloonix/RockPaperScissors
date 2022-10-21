@@ -3,12 +3,14 @@ pragma solidity ^0.8.0;
 
 import "../contracts/VRF.sol";
 import "../contracts/RockPaperScissors.sol";
+import "./MockWallet.sol";
 
 contract MockRockPaperScissors {
     IVRF public immutable vrf;
     RockPaperScissors public immutable game;
 
     constructor() payable {
+        require(msg.value >= 1 ether, "ether required");
         IVRF _vrf = new VRF(address(this), address(this));
         vrf = _vrf;
         game = new RockPaperScissors(address(_vrf));
@@ -18,7 +20,20 @@ contract MockRockPaperScissors {
 
     receive() external payable {}
 
-    function withdrawPendingBetDeposit() public {
+    function testDeposit() public {
+        uint256 _round = 0;
+        bytes32 _secret = bytes32(
+            0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
+        );
+
+        uint256 _nonce = 0;
+
+        vrf.proposeRound(_round, vrf.computeHash(_secret));
+
+        game.deposit{value: 0.01 ether}(_round, _nonce, address(0), 0);
+    }
+
+    function testWithdrawPendingBet() public {
         uint256 _round = 0;
         bytes32 _secret = bytes32(
             0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
@@ -30,7 +45,28 @@ contract MockRockPaperScissors {
 
         vrf.proposeRound(_round, vrf.computeHash(_secret));
 
-        game.deposit{value: 1 ether}(_round, _nonce, address(0), 0);
+        game.deposit{value: 0.01 ether}(_round, _nonce, address(0), 0);
+
+        uint256 balanceAfter = address(this).balance;
+        assert(balanceBefore - balanceAfter == 1 ether);
+
+        game.withdrawPendingBet(_round, _nonce);
+        assert(balanceBefore == address(this).balance);
+    }
+
+    function testGame() public {
+        uint256 _round = 0;
+        bytes32 _secret = bytes32(
+            0x8f77668a9dfbf8d5848b9eeb4a7145ca96c6ed9236e4a773f6dcafa5132b2f91
+        );
+
+        uint256 _nonce = 0;
+
+        uint256 balanceBefore = address(this).balance;
+
+        vrf.proposeRound(_round, vrf.computeHash(_secret));
+
+        game.deposit{value: 0.01 ether}(_round, _nonce, address(0), 0);
 
         uint256 balanceAfter = address(this).balance;
         assert(balanceBefore - balanceAfter == 1 ether);
