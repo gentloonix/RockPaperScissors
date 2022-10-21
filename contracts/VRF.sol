@@ -13,7 +13,9 @@ contract VRF is IVRF, AccessControl {
         bytes32(uint256(keccak256("vrf.attestor")) - 1);
 
     // === STATES ===
+    // roundHash: hashed, salted secret
     mapping(uint256 => bytes32) public roundHash;
+    // roundSecret: secret
     mapping(uint256 => bytes32) public roundSecret;
 
     constructor(address _proposer, address _attestor) {
