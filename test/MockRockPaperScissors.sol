@@ -8,22 +8,27 @@ contract MockRockPaperScissors {
     IVRF public immutable vrf;
     RockPaperScissors public immutable game;
 
-    uint256 round = 0;
-
-    constructor() {
+    constructor() payable {
         vrf = new VRF(address(this), address(this));
         game = new RockPaperScissors(address(vrf));
     }
 
+    fallback() external payable {}
+
+    receive() external payable {}
+
     function withdrawPendingBetDeposit() public {
+        uint256 _round = 0;
+        uint256 _nonce = 0;
+
         uint256 balanceBefore = address(this).balance;
 
-        game.deposit{value: 1 ether}(round, 0, address(0), 0);
+        game.deposit{value: 1 ether}(_round, _nonce, address(0), 0);
 
         uint256 balanceAfter = address(this).balance;
         assert(balanceBefore - balanceAfter == 1 ether);
 
-        game.withdrawPendingBet(round, 0);
+        game.withdrawPendingBet(_round, _nonce);
         assert(balanceBefore == address(this).balance);
     }
 }
