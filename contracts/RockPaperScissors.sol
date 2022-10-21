@@ -11,8 +11,8 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
     // === ENUMS ===
     enum Result {
         Rock,
-        Paper,
-        Scissors
+        Scissors,
+        Paper
     }
 
     // === STRUCTS ===
@@ -232,7 +232,27 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             opponent_block_number
         );
 
-        // TODO rock-paper-scissors logic
-        // TODO transfer tokens accordingly
+        if (player_choice == opponent_choice) {
+            // draw, refund both players
+            Address.sendValue(payable(player), amount);
+            Address.sendValue(payable(opponent), amount);
+        } else {
+            if (
+                player_choice == Result.Paper && opponent_choice == Result.Rock
+            ) {
+                // player wins
+                Address.sendValue(payable(player), amount * 2);
+            } else if (
+                opponent_choice == Result.Paper && player_choice == Result.Rock
+            ) {
+                // opponent wins
+                Address.sendValue(payable(opponent), amount * 2);
+            } else {
+                uint256 player_choice_uint256 = uint256(player_choice);
+                uint256 opponent_choice_uint256 = uint256(opponent_choice);
+
+                // TODO implement me
+            }
+        }
     }
 }
