@@ -44,6 +44,11 @@ contract RockPaperScissors is Ownable {
         address _player,
         uint256 _block_number
     ) public view returns (Result) {
+        require(
+            vrf.isRoundValid(_round) && !vrf.isRoundOpen(_round),
+            "generateResult:: round not valid or still open"
+        );
+
         return
             Result(
                 vrf.generate(
