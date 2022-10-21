@@ -21,6 +21,7 @@ contract VRF is IVRF, AccessControl {
     constructor(address _proposer, address _attestor) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
 
+        // default to deployer on null
         _setupRole(
             PROPOSER_ROLE,
             _proposer == address(0) ? msg.sender : _proposer
