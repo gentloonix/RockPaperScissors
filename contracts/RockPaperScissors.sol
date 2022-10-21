@@ -55,7 +55,7 @@ contract RockPaperScissors is Ownable {
             );
     }
 
-    // === VIEWS PRIVATE ===
+    // === UTILS ===
     function _parseBetPair(
         address _player,
         uint256 _round,
