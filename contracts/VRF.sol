@@ -78,6 +78,7 @@ contract VRF is IVRF, AccessControl {
     }
 
     // === MUTATIVES (RESTRICTED) ===
+    // proposeRound: propose hashed and salted secret for round
     function proposeRound(uint256 _round, bytes32 _hash)
         external
         override
@@ -88,6 +89,7 @@ contract VRF is IVRF, AccessControl {
         roundHash[_round] = _hash;
     }
 
+    // attestRound: attest secret for round
     function attestRound(uint256 _round, bytes32 _secret)
         external
         override
