@@ -21,7 +21,7 @@ contract VRF is IVRF, AccessControl {
     constructor(address _proposer, address _attestor) {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
 
-        // default to deployer on null
+        // null addresses default to msg.sender
         _setupRole(
             PROPOSER_ROLE,
             _proposer == address(0) ? msg.sender : _proposer
@@ -63,6 +63,7 @@ contract VRF is IVRF, AccessControl {
         require(isRoundValid(_round), "generate:: round is not valid");
         require(!isRoundOpen(_round), "generate:: round is not closed");
 
+        // keccak256 based deterministic entropy
         return
             (uint256(
                 keccak256(
