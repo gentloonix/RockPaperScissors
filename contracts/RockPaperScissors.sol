@@ -82,7 +82,8 @@ contract RockPaperScissors is Ownable {
             "invalid player bet"
         );
 
-        player = _player;
+        player = mPlayerBet.player;
+        require(player == _player, "mismatch player");
         player_nonce = mPlayerBet.player_nonce;
         require(player_nonce == _nonce, "mismatch nonce");
         opponent = mPlayerBet.opponent;
