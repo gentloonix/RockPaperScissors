@@ -156,11 +156,11 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
-
             require(
                 msg.value >= mOpponentPendingBet.amount,
                 "deposit:: mismatch amount"
             );
+
             if (msg.value > mOpponentPendingBet.amount) {
                 Address.sendValue(
                     payable(_player),
