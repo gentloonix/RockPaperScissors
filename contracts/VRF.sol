@@ -30,16 +30,21 @@ contract VRF is IVRF, AccessControl {
     }
 
     // === VIEWS ===
-    function computeHash(bytes32 _secret) public view returns (bytes32) {
-        // salt (address(this)), _secret
-        return keccak256(abi.encodePacked(address(this), _secret));
+    function computeHash(bytes32 _secret)
+        public
+        pure
+        override
+        returns (bytes32)
+    {
+        // salt, _secret
+        return keccak256(abi.encodePacked("ebs369.vrf", _secret));
     }
 
-    function isRoundValid(uint256 _round) public view returns (bool) {
+    function isRoundValid(uint256 _round) public view override returns (bool) {
         return roundHash[_round] != bytes32(0);
     }
 
-    function isRoundOpen(uint256 _round) public view returns (bool) {
+    function isRoundOpen(uint256 _round) public view override returns (bool) {
         return isRoundValid(_round) && roundSecret[_round] == bytes32(0);
     }
 
@@ -49,7 +54,7 @@ contract VRF is IVRF, AccessControl {
         uint256 _round,
         uint256 _nonce,
         bytes memory _entropy
-    ) public view returns (uint256) {
+    ) public view override returns (uint256) {
         require(_max > _min, "generate:: invalid range");
 
         require(isRoundValid(_round), "generate:: round is not valid");
@@ -71,6 +76,7 @@ contract VRF is IVRF, AccessControl {
     // === MUTATIVES (RESTRICTED) ===
     function proposeRound(uint256 _round, bytes32 _hash)
         external
+        override
         onlyRole(PROPOSER_ROLE)
     {
         require(!isRoundValid(_round), "propose:: proposed");
@@ -80,6 +86,7 @@ contract VRF is IVRF, AccessControl {
 
     function attestRound(uint256 _round, bytes32 _secret)
         external
+        override
         onlyRole(ATTESTOR_ROLE)
     {
         require(isRoundValid(_round), "attest:: not proposed");
