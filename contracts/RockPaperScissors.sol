@@ -138,6 +138,10 @@ contract RockPaperScissors is Ownable {
                     mOpponentPendingBet.opponent == address(0),
                 "deposit:: not opponent"
             );
+            require(
+                msg.value == mOpponentPendingBet.amount,
+                "deposit:: mismatch amount"
+            );
             Bet memory mPendingBet = userRoundNoncePendingBet[msg.sender][
                 _round
             ][_player_nonce];
