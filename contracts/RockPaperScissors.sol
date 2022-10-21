@@ -121,7 +121,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
     }
 
     // === MUTATIVES ===
-    // deposit: place pending bet or establish bet pair with desired opponent
+    // deposit: place a pending bet or establish a bet pair with the desired opponent
     function deposit(
         uint256 _round,
         uint256 _player_nonce,
