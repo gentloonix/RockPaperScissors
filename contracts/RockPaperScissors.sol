@@ -41,6 +41,7 @@ contract RockPaperScissors is Ownable {
     function generateResult(
         uint256 _round,
         uint256 _nonce,
+        address _player,
         uint256 _block_number
     ) public view returns (Result) {
         return
@@ -50,7 +51,7 @@ contract RockPaperScissors is Ownable {
                     2,
                     _round,
                     _nonce,
-                    abi.encodePacked(blockhash(_block_number))
+                    abi.encodePacked(_player, blockhash(_block_number))
                 )
             );
     }
@@ -194,11 +195,13 @@ contract RockPaperScissors is Ownable {
         Result player_choice = generateResult(
             round,
             player_nonce,
+            player,
             player_block_number
         );
         Result opponent_choice = generateResult(
             round,
             opponent_nonce,
+            opponent,
             opponent_block_number
         );
 
