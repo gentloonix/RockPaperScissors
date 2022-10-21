@@ -141,6 +141,8 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             "deposit:: pending bet"
         );
 
+        // place pending bet regardless if opponent pending bet exists
+        // opponent pending bet is handled later
         userRoundNoncePendingBet[_player][_round][_player_nonce] = Bet(
             _player,
             _player_nonce,
@@ -150,6 +152,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
             block.number
         );
 
+        // get records
         Bet memory mPendingBet = userRoundNoncePendingBet[_player][_round][
             _player_nonce
         ];
@@ -168,6 +171,7 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
                 "deposit:: mismatch amount"
             );
 
+            // refund user if overpaid
             if (msg.value > mOpponentPendingBet.amount) {
                 Address.sendValue(
                     payable(_player),
@@ -175,14 +179,17 @@ contract RockPaperScissors is Ownable, ReentrancyGuard {
                 );
             }
 
+            // update values accordingly
             mOpponentPendingBet.opponent = _player;
             mOpponentPendingBet.opponent_nonce = _player_nonce;
 
             mPendingBet.amount = mOpponentPendingBet.amount;
 
+            // clear records
             delete userRoundNoncePendingBet[_player][_round][_player_nonce];
             delete userRoundNoncePendingBet[_opponent][_round][_opponent_nonce];
 
+            // set an established bet pair
             userRoundNonceBet[_player][_round][_player_nonce] = mPendingBet;
             userRoundNonceBet[_opponent][_round][
                 _opponent_nonce
